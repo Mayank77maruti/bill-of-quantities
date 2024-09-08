@@ -27,11 +27,11 @@ header p {
 }
 
 .furniture-header {
-  font-size: 28px; /* Large, readable font size */
-  color: #333; /* Dark color for good contrast */
+  font-size: 28px;
+  color: #333;
   margin-bottom: 20px;
-  font-weight: bold; /* Emphasize the header */
-  padding: 1px 26px; /* Adds spacing around the text */
+  font-weight: bold;
+  padding: 5px 20px; /* Adjusted padding for better visual balance */
 }
 
 .container {
@@ -46,7 +46,7 @@ header p {
 .card {
   background-color: #fff;
   border-radius: 12px;
-  padding: 25px;
+  padding: 20px; /* Slightly reduced padding for a cleaner look */
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
   max-width: 350px;
   flex: 1;
@@ -68,13 +68,13 @@ header p {
 .image-container {
   display: flex;
   align-items: center;
-  gap: 20px;
-  margin-bottom: 20px;
+  gap: 15px; /* Reduced gap for a more compact design */
+  margin-bottom: 15px;
 }
 
 .image {
-  width: 120px;
-  height: 120px;
+  width: 100px; /* Reduced width for a smaller image */
+  height: 100px; /* Reduced height for a smaller image */
   object-fit: cover;
   border-radius: 8px;
   border: 1px solid #ddd;
@@ -102,12 +102,13 @@ header p {
 .edit, .see-more {
   background-color: #2d2d2d;
   color: #fff;
-  padding: 8px 15px;
+  padding: 10px 18px; /* Adjusted padding for a balanced look */
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  margin-left: 10px;
   transition: background-color 0.3s, box-shadow 0.3s;
+  font-size: 0.9em; /* Reduced font size for better fit */
+  margin-left: 12px; /* Increased margin for more space between buttons */
 }
 
 .edit:hover, .see-more:hover {
@@ -115,6 +116,8 @@ header p {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+
+/* Add-on Styles */
 .add-on-container {
   display: flex;
   justify-content: space-between;
@@ -148,35 +151,30 @@ header p {
 /* Centering Container */
 .center-button-container {
   display: flex;
-  justify-content: center; /* Horizontally center */
-  align-items: flex-end;     /* Vertically align to the bottom */
-  padding: 20px;           /* Add some padding to create space */
-  width: 100%;             /* Full width */
-  position: relative;      /* Allows positioning of button within this container */
-  background-color: #f9f9f9; /* Match the background color of the body */
+  justify-content: center;
+  padding: 20px;
+  width: 100%;
+  background-color: #f9f9f9;
 }
 
 /* Explore More Button */
 .explore-more {
   background-color: #0066cc;
   color: #fff;
-  padding: 17px 25px;
+  padding: 12px 20px; /* Adjusted padding for a cleaner look */
   border: none;
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.2s;
+  font-size: 1em; /* Adjusted font size for better balance */
 }
 
 .explore-more:hover {
   background-color: #005bb5;
-  transform: translateY(-3px);
+  transform: translateY(-2px);
 }
 
-
 /* Responsive adjustments */
-/* Add this to your existing CSS */
-
-/* Mobile responsive adjustments */
 @media (max-width: 768px) {
   .container {
     flex-direction: column;
@@ -188,15 +186,33 @@ header p {
     max-width: 90%;
   }
 
-  /* Add this to remove the white space on the left side */
   .center-button-container {
-    padding: 20px 0; /* Remove left and right padding */
+    padding: 20px 0;
   }
 
-  /* Add this to make the Explore More button full width */
   .explore-more {
     width: 100%;
     max-width: 90%;
   }
 }
 
+@media (max-width: 480px) {
+  .card {
+    padding: 15px; /* Adjusted padding for smaller screens */
+  }
+
+  .image {
+    width: 80px; /* Further reduced image size for smaller screens */
+    height: 80px; /* Further reduced image size for smaller screens */
+  }
+
+  .edit, .see-more {
+    padding: 10px 15px; /* Further reduced padding for better fit on small screens */
+    font-size: 0.8em; /* Smaller font size for compact screens */
+  }
+
+  .explore-more {
+    padding: 10px 15px; /* Reduced padding for mobile */
+    font-size: 0.9em; /* Smaller font size for mobile */
+  }
+}
