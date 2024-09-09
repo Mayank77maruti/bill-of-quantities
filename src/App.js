@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './App.css';
 
-function Card({ title, price, details, addOns }) {
+function Card({ title, price, details, addOns, onClick }) {
   const [isDropdownVisible, setDropdownVisible] = useState(false);
   const [selectedAddOns, setSelectedAddOns] = useState({});
   const dropdownRef = useRef(null);
@@ -36,7 +36,7 @@ function Card({ title, price, details, addOns }) {
   }, []);
 
   return (
-    <div className="card">
+    <div className="card" onClick={onClick}>
       <div className="image-container">
         <img src="https://placehold.co/120x120" alt={title} className="image" />
         <div>
@@ -52,7 +52,7 @@ function Card({ title, price, details, addOns }) {
       </div>
 
       <div className="add-on-container" ref={dropdownRef}>
-        <button className="add-on" onClick={toggleDropdown}>ADD ON +</button>
+        <button className="add-on" onClick={(e) => {e.stopPropagation(); toggleDropdown();}}>ADD ON +</button>
         {isDropdownVisible && (
           <div className="dropdown-menu">
             <ul>
@@ -79,8 +79,50 @@ function Card({ title, price, details, addOns }) {
   );
 }
 
+function Modal({ product, onClose }) {
+  if (!product) return null;
+
+  const calculateTotalPrice = () => {
+    const basePrice = parseInt(product.price.replace('₹', ''), 10);
+    const addOnPrice = product.addOns.reduce((total, addOn) => total + addOn.price, 0);
+    return basePrice + addOnPrice;
+  };
+
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <button className="close-modal" onClick={onClose}>×</button>
+        <h2>{product.title}</h2>
+        <img src="https://placehold.co/250x250" alt={product.title} className="modal-image" />
+        <p className="price">₹{calculateTotalPrice()}</p>
+        <p className="details">{product.details}</p>
+        <div className="addons-list">
+          <h3>Add-ons:</h3>
+          <ul>
+            {product.addOns.map((addOn, index) => (
+              <li key={index}>
+                <img src={addOn.image} alt={addOn.name} className="addon-image" />
+                {addOn.name} (+₹{addOn.price})
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function App() {
+  const [selectedProduct, setSelectedProduct] = useState(null);
+
+  const handleCardClick = (product) => {
+    setSelectedProduct(product);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedProduct(null);
+  };
+
   const furniture = [
     {
       title: 'Table',
@@ -196,6 +238,7 @@ function App() {
             price={product.price}
             details={product.details}
             addOns={product.addOns}
+            onClick={() => handleCardClick(product)}
           />
         ))}
       </div>
@@ -209,6 +252,7 @@ function App() {
             price={product.price}
             details={product.details}
             addOns={product.addOns}
+            onClick={() => handleCardClick(product)}
           />
         ))}
       </div>
@@ -222,6 +266,7 @@ function App() {
             price={product.price}
             details={product.details}
             addOns={product.addOns}
+            onClick={() => handleCardClick(product)}
           />
         ))}
       </div>
@@ -229,6 +274,8 @@ function App() {
       <div className="center-button-container">
         <button className="explore-more">EXPLORE MORE</button>
       </div>
+
+      <Modal product={selectedProduct} onClose={handleCloseModal} />
     </>
   );
 }

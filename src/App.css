@@ -653,14 +653,6 @@ header p {
   margin-bottom: 20px;
 }
 
-.addon-image {
-  width: 50px;
-  height: 50px;
-  margin-right: 8px;
-  vertical-align: middle;
-}
-
-
 .image-container {
   display: flex;
   align-items: center;
@@ -804,35 +796,96 @@ header p {
   align-items: center;
 }
 
-
-
-
-
-
-
-
-/* Responsive adjustments */
-
-@media (max-width: 768px) {
-  .container {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .card {
-    width: 100%;
-    max-width: 90%;
-  }
-
-  .center-button-container {
-    padding: 20px 0;
-  }
-
-  .explore-more {
-    width: 100%;
-    max-width: 90%;
-  }
+/* Modal styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6); /* Darkened overlay for better focus */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden; /* Prevents scrolling the entire page */
+  z-index: 1000; /* Ensures modal stays on top */
 }
+
+.modal-content {
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 12px;
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+  position: relative;
+  max-height: 80vh; /* Limits the height of the modal to 80% of the viewport */
+  overflow-y: auto; /* Enables vertical scrolling within the modal */
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2); /* Adds a subtle shadow for depth */
+  animation: fadeIn 0.3s ease-in-out; /* Smooth fade-in effect */
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.modal-image {
+  width: 100%;
+  height: auto;
+  margin-bottom: 20px;
+  border-radius: 8px; /* Rounded corners for the image */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for the image */
+}
+
+.close-modal {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: #333;
+  transition: color 0.3s ease;
+}
+
+.close-modal:hover {
+  color: #e74c3c; /* Changes color on hover for a visual cue */
+}
+
+.addons-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 20px;
+}
+
+.addons-list li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+  background-color: #f1f3f5; /* Lighter grey background for each add-on item */
+  padding: 12px;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+}
+
+.addons-list li:hover {
+  background-color: #e9ecef; /* Slight color change on hover for interactivity */
+}
+
+.addons-list .addon-image {
+  margin-right: 12px;
+  width: 50px;
+  height: 50px;
+  border-radius: 6px; /* Rounded corners for consistency */
+  object-fit: cover;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Light shadow for the image */
+}
+
+
+
+
 
 
 
