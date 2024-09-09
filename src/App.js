@@ -5,7 +5,7 @@ function Card({ title, price, details, addOns }) {
   const [isDropdownVisible, setDropdownVisible] = useState(false);
   const [selectedAddOns, setSelectedAddOns] = useState({});
   const dropdownRef = useRef(null);
-  const basePrice = parseInt(price.replace('₹', ''), 10); // Convert price to a number
+  const basePrice = parseInt(price.replace('₹', ''), 10);
 
   const toggleDropdown = () => {
     setDropdownVisible(!isDropdownVisible);
@@ -63,6 +63,7 @@ function Card({ title, price, details, addOns }) {
                       type="checkbox"
                       onChange={(e) => handleAddOnChange(addOn, e.target.checked)}
                     />
+                    <img src={addOn.image} alt={addOn.name} className="addon-image" />
                     {addOn.name} (+₹{addOn.price})
                   </label>
                 </li>
@@ -78,6 +79,7 @@ function Card({ title, price, details, addOns }) {
   );
 }
 
+
 function App() {
   const furniture = [
     {
@@ -85,8 +87,8 @@ function App() {
       price: '₹4500',
       details: '4 legs, 5 tops',
       addOns: [
-        { name: 'Storage', price: 1000 },
-        { name: 'Leg Guard', price: 500 }
+        { name: 'Storage', price: 1000, image: 'https://placehold.co/50x50?text=Storage' },
+        { name: 'Leg Guard', price: 500, image: 'https://placehold.co/50x50?text=Leg+Guard' }
       ]
     },
     {
@@ -94,8 +96,8 @@ function App() {
       price: '₹25000',
       details: '4 legs, 5 tops',
       addOns: [
-        { name: 'Custom Shelves', price: 2000 },
-        { name: 'Drawer Lock', price: 300 }
+        { name: 'Custom Shelves', price: 2000, image: 'https://placehold.co/50x50?text=Custom+Shelves' },
+        { name: 'Drawer Lock', price: 300, image: 'https://placehold.co/50x50?text=Drawer+Lock' }
       ]
     },
     {
@@ -103,8 +105,8 @@ function App() {
       price: '₹12000',
       details: 'Adjustable, ergonomic',
       addOns: [
-        { name: 'Headrest', price: 800 },
-        { name: 'Lumbar Support', price: 500 }
+        { name: 'Headrest', price: 800, image: 'https://placehold.co/50x50?text=Custom+Shelves' },
+        { name: 'Lumbar Support', price: 500, image: 'https://placehold.co/50x50?text=Custom+Shelves' }
       ]
     },
     {
@@ -112,8 +114,8 @@ function App() {
       price: '₹8000',
       details: '5 shelves, wooden',
       addOns: [
-        { name: 'Glass Doors', price: 1500 },
-        { name: 'LED Lighting', price: 1200 }
+        { name: 'Glass Doors', price: 1500, image: 'https://placehold.co/50x50?text=Custom+Shelves' },
+        { name: 'LED Lighting', price: 1200, image: 'https://placehold.co/50x50?text=Custom+Shelves' }
       ]
     }
   ];
@@ -124,8 +126,8 @@ function App() {
       price: '₹7000',
       details: 'High back, leather',
       addOns: [
-        { name: 'Cushion', price: 500 },
-        { name: 'Armrest Pads', price: 300 }
+        { name: 'Cushion', price: 500, image: 'https://placehold.co/50x50?text=Custom+Shelves' },
+        { name: 'Armrest Pads', price: 300, image: 'https://placehold.co/50x50?text=Custom+Shelves' }
       ]
     },
     {
@@ -133,8 +135,8 @@ function App() {
       price: '₹15000',
       details: 'Reclining, ergonomic',
       addOns: [
-        { name: 'Footrest', price: 1000 },
-        { name: 'Cooling Gel', price: 700 }
+        { name: 'Footrest', price: 1000, image: 'https://placehold.co/50x50?text=Custom+Shelves' },
+        { name: 'Cooling Gel', price: 700, image: 'https://placehold.co/50x50?text=Custom+Shelves' }
       ]
     },
     {
@@ -142,8 +144,8 @@ function App() {
       price: '₹3000',
       details: 'Stackable, lightweight',
       addOns: [
-        { name: 'Extra Padding', price: 200 },
-        { name: 'Anti-Slip Pads', price: 100 }
+        { name: 'Extra Padding', price: 200, image: 'https://placehold.co/50x50?text=Custom+Shelves' },
+        { name: 'Anti-Slip Pads', price: 100, image: 'https://placehold.co/50x50?text=Custom+Shelves' }
       ]
     }
   ];
@@ -154,8 +156,8 @@ function App() {
       price: '₹10000',
       details: 'Tempered glass, frameless',
       addOns: [
-        { name: 'Frosted Glass', price: 2000 },
-        { name: 'Custom Tint', price: 1500 }
+        { name: 'Frosted Glass', price: 2000, image: 'https://placehold.co/50x50?text=Custom+Shelves' },
+        { name: 'Custom Tint', price: 1500 , image: 'https://placehold.co/50x50?text=Custom+Shelves'}
       ]
     },
     {
@@ -163,8 +165,8 @@ function App() {
       price: '₹8000',
       details: 'Oak wood, customizable',
       addOns: [
-        { name: 'Varnish', price: 500 },
-        { name: 'Custom Carving', price: 1200 }
+        { name: 'Varnish', price: 500, image: 'https://placehold.co/50x50?text=Custom+Shelves' },
+        { name: 'Custom Carving', price: 1200, image: 'https://placehold.co/50x50?text=Custom+Shelves' }
       ]
     },
     {
@@ -172,8 +174,8 @@ function App() {
       price: '₹6000',
       details: 'Soundproof, various colors',
       addOns: [
-        { name: 'Custom Color', price: 800 },
-        { name: 'Extra Padding', price: 600 }
+        { name: 'Custom Color', price: 800, image: 'https://placehold.co/50x50?text=Custom+Shelves' },
+        { name: 'Extra Padding', price: 600, image: 'https://placehold.co/50x50?text=Custom+Shelves' }
       ]
     }
   ];
