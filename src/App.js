@@ -1,5 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import './App.css';
+import { Slider } from '@mui/material';
+
 
 const Card = ({ title, price, details, addOns, initialMinimized = false }) => {
   const [selectedAddOns, setSelectedAddOns] = useState({});
@@ -77,6 +79,10 @@ const CardSection = ({ className, children }) => {
 };
 
 const App = () => {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [priceRange, setPriceRange] = useState([1000, 5000]);
+  const [compareList, setCompareList] = useState([]);
+
   const productsData = useMemo(() => [
     {
       title: "Workstation",
@@ -126,18 +132,66 @@ const App = () => {
     }
   ], []);
 
+  const handleSearch = (event) => {
+    setSearchQuery(event.target.value.toLowerCase());
+  };
+
+  const handleSliderChange = (event, newValue) => {
+    setPriceRange(newValue);
+  };
+
+  const handleCompareToggle = (product) => {
+    setCompareList((prevCompareList) => {
+      if (prevCompareList.includes(product)) {
+        return prevCompareList.filter((item) => item !== product);
+      } else {
+        return [...prevCompareList, product];
+      }
+    });
+  };
+
+  const filteredProducts = productsData.filter((product) => {
+    const price = parseInt(product.price.replace('₹', ''), 10);
+    return (
+      product.title.toLowerCase().includes(searchQuery) &&
+      price >= priceRange[0] &&
+      price <= priceRange[1]
+    );
+  });
+
   return (
     <div className="App">
-      {productsData.map((product, index) => (
-        <Card
-          key={index}
-          title={product.title}
-          price={product.price}
-          details={product.details}
-          addOns={product.addOns}
-          initialMinimized={product.initialMinimized}
+      <div className="search-filter">
+        <input
+          type="text"
+          placeholder="Search products..."
+          value={searchQuery}
+          onChange={handleSearch}
+          className="search-bar"
         />
-      ))}
+        <Slider
+          value={priceRange}
+          onChange={handleSliderChange}
+          valueLabelDisplay="auto"
+          min={1000}
+          max={5000}
+          className="price-slider"
+        />
+      </div>
+
+      <div className="products-grid">
+        {filteredProducts.map((product, index) => (
+          <div key={index}>
+            <Card
+              title={product.title}
+              price={product.price}
+              details={product.details}
+              addOns={product.addOns}
+              initialMinimized={product.initialMinimized}
+            />
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
