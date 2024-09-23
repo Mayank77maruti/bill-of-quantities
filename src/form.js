@@ -1,4 +1,5 @@
 import React from 'react';
+import './form.css';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { supabase } from './supabase';
 

@@ -99,12 +99,14 @@ const App = () => {
       for(let ind in data){
         let obj = data[ind];
         const {data:Photo, error:PhotoError} = await supabase.storage.from("addon").createSignedUrl(`${obj.image}`, 3600);
+        if(PhotoError)
         console.log(PhotoError)
         const {data:addons, error:addonsError} = await supabase.from("addons").select().eq("productid",obj.id);
         let addonsList=[]
         for(let adn in addons){
           let adf = addons[adn];
           const {data:Photo2, error:PhotoError2} = await supabase.storage.from("addon").createSignedUrl(`${adf.image}`,3600);
+          if(PhotoError2)
           console.log(PhotoError2)
           addonsList.push({...adf, image:Photo2.signedUrl})
         }
@@ -174,7 +176,7 @@ const App = () => {
   </div>
 ))}
       </div>
-<ProductForm />
+{/*<ProductForm />*/}
      </div>
     
    );
