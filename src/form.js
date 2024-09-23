@@ -4,12 +4,26 @@ import { useForm, useFieldArray } from 'react-hook-form';
 import { supabase } from './supabase';
 
 const ProductForm = () => {
+  const categories = [
+    'Furniture', 
+    'Civil / Plumbing', 
+    'Lighting', 
+    'Electrical', 
+    'Partitions- door / windows / ceilings',
+    'Paint', 
+    'HVAC', 
+    'Smart Solutions', 
+    'Flooring', 
+    'Accessories'
+  ];
+
   const { register, handleSubmit, control, formState: { errors } } = useForm({
     defaultValues: {
       title: '',
       details: '',
       price: '',
-      image:null,
+      image: null,
+      category: '',
       addons: [{ image: null, title: '', price: '' }]
     }
   });
@@ -20,44 +34,60 @@ const ProductForm = () => {
   });
 
   const onSubmit = async (data) => {
-    console.log(data)
-    const {data:ProductImage, error:ProductImageError} = await supabase.storage.from("addon").upload(`${data.title}-${data.details}`, data.image[0])
-    if(ProductImageError) {
-        console.log(ProductImageError);
-        return;
+    console.log(data);
+    const { data: ProductImage, error: ProductImageError } = await supabase.storage.from("addon").upload(`${data.title}-${data.details}`, data.image[0]);
+    if (ProductImageError) {
+      console.log(ProductImageError);
+      return;
     }
-    const {data:Product, error} = await supabase.from("products").insert({
-        title:data.title,
-        details:data.details,
-        price:data.price,
-        image:ProductImage.path,
+
+    const { data: Product, error } = await supabase.from("products").insert({
+      title: data.title,
+      details: data.details,
+      price: data.price,
+      image: ProductImage.path,
+      category: data.category,  // Added category field
     }).select().single();
+
     if (error) {
-    console.log(error);
-    return;
+      console.log(error);
+      return;
     }
-      
-    for(let addons in data.addons){
-        const adf = data.addons[addons];
-        console.log(adf)
-        const {data:AddonFile, error:AddonFileError} = await supabase.storage.from("addon").upload(`${Product.id}-${adf.title}`,adf.image[0]);
-        if(AddonFileError){
-            console.error(AddonFileError);
-            await supabase.from("products").delete().eq("id",Product.id);
-            break;
-        }
-        const { error:AddonError} = await supabase.from("addons").insert({title:adf.title, price:adf.price, image:AddonFile.path, productid:Product.id});
-        if(AddonError){
-            console.error(AddonError);
-            await supabase.from("products").delete().eq("id",Product.id);
-            break;
-        }
+
+    for (let addons in data.addons) {
+      const adf = data.addons[addons];
+      console.log(adf);
+      const { data: AddonFile, error: AddonFileError } = await supabase.storage.from("addon").upload(`${Product.id}-${adf.title}`, adf.image[0]);
+      if (AddonFileError) {
+        console.error(AddonFileError);
+        await supabase.from("products").delete().eq("id", Product.id);
+        break;
+      }
+      const { error: AddonError } = await supabase.from("addons").insert({ title: adf.title, price: adf.price, image: AddonFile.path, productid: Product.id });
+      if (AddonError) {
+        console.error(AddonError);
+        await supabase.from("products").delete().eq("id", Product.id);
+        break;
+      }
     }
   };
 
   return (
     <form className="" onSubmit={handleSubmit(onSubmit)}>
       <div>
+        <div>
+          <label>Category:</label>
+          <select {...register('category', { required: 'Category is required' })}>
+            <option value="">Select Category</option>
+            {categories.map((category, index) => (
+              <option key={index} value={category}>
+                {category}
+              </option>
+            ))}
+          </select>
+          {errors.category && <p>{errors.category.message}</p>}
+        </div>
+
         <label>Title:</label>
         <input
           type="text"
@@ -82,12 +112,13 @@ const ProductForm = () => {
         />
         {errors.price && <p>{errors.price.message}</p>}
       </div>
+
       <div>
-      <label>Image:</label>
-            <input
-              type="file"
-              {...register(`image`, { required: 'Image is required' })}
-            />
+        <label>Image:</label>
+        <input
+          type="file"
+          {...register(`image`, { required: 'Image is required' })}
+        />
       </div>
 
       <div>

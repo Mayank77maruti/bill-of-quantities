@@ -83,6 +83,18 @@ const App = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [priceRange, setPriceRange] = useState([1000, 5000]);
   const [productsData, setProductData] = useState([]);
+  const categories = [
+    'Furniture', 
+    'Civil / Plumbing', 
+    'Lighting', 
+    'Electrical', 
+    'Partitions- door / windows / ceilings',
+    'Paint', 
+    'HVAC', 
+    'Smart Solutions', 
+    'Flooring', 
+    'Accessories'
+  ];
   const [loading, setLoading] = useState(true);
 
   async function getProducts() {
@@ -90,6 +102,7 @@ const App = () => {
   }
 
   useEffect(() => {
+
     getProducts().then(async ({ data, error }) => {
       if (error) { 
         console.error(error); 
@@ -129,7 +142,7 @@ const App = () => {
         {loading ? (
           <>
             <Skeleton variant="rectangular" height={40} width="80%" className="skeleton-bar" />
-            <Skeleton variant="rectangular" height={40} width="80%" className="skeleton-slider" style={{ marginTop: '10px' }} />
+            <Skeleton variant="rectangular" height={40} width="80%" className="skeleton-slider" />
           </>
         ) : (
           <>
@@ -151,23 +164,30 @@ const App = () => {
           </>
         )}
       </div>
-  
+
       <div className="products-grid">
         {loading ? (
           Array.from({ length: 4 }).map((_, index) => (
             <Skeleton key={index} variant="rectangular" height={200} width="90%" style={{ margin: '10px 0' }} />
           ))
         ) : (
-          productsData.map((product, index) => (
-            <div key={index}>
-              <Card
-                title={product.title}
-                price={product.price}
-                details={product.details}
-                addOns={product.addons}
-                image={product.image}
-                initialMinimized={product.initialMinimized}
-              />
+          categories.map((category) => (
+            <div key={category} className="category-section">
+              <h2>{category}</h2>
+              {productsData
+                .filter((product) => product.category === category)
+                .map((product, index) => (
+                  <div key={index}>
+                    <Card
+                      title={product.title}
+                      price={product.price}
+                      details={product.details}
+                      addOns={product.addons}
+                      image={product.image}
+                      initialMinimized={product.initialMinimized}
+                    />
+                  </div>
+                ))}
             </div>
           ))
         )}
