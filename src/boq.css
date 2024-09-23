@@ -670,6 +670,23 @@ body {
   margin-right: 12px;
 }
 
+.category-section {
+  margin-bottom: 30px;
+}
+
+.category-section h2 {
+  font-size: 24px;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.category-products {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+
 /* Minimized Card */
 .minimized-card {
   display: flex;

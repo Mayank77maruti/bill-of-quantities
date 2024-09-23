@@ -1,11 +1,9 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import './boq.css';
-import { Slider } from '@mui/material';
-import ProductForm from './form';
+import { Slider, Skeleton } from '@mui/material';
 import { supabase } from './supabase';
 
-
-const Card = ({ title, price, image,details, addOns, initialMinimized = false }) => {
+const Card = ({ title, price, image, details, addOns, initialMinimized = false }) => {
   const [selectedAddOns, setSelectedAddOns] = useState({});
   const [isMinimized, setIsMinimized] = useState(initialMinimized);
   const basePrice = price;
@@ -38,42 +36,41 @@ const Card = ({ title, price, image,details, addOns, initialMinimized = false })
 
   return (
     <>
-    <div className="card-container">
-      <CardSection className="card-image">
-        <img src={image} alt={title} className="image" />
-      </CardSection>
+      <div className="card-container">
+        <CardSection className="card-image">
+          <img src={image} alt={title} className="image" />
+        </CardSection>
 
-      <CardSection className="card-features">
-      
-        <h3>{title}</h3>
-        <p>{details}</p>
-      </CardSection>
+        <CardSection className="card-features">
+          <h3>{title}</h3>
+          <p>{details}</p>
+        </CardSection>
 
-      <CardSection className="card-add-ons">
-      <h3>ADD ON</h3>
-        <ul>
-          {addOns.map((addOn, index) => (
-            <li key={index}>
-              <label>
-                <input
-                  type="checkbox"
-                  onChange={(e) => handleAddOnChange(addOn, e.target.checked)}
-                />
-                {addOn.name} (+₹{addOn.price})
-              </label>
-            </li>
-          ))}
-        </ul>
-      </CardSection>
+        <CardSection className="card-add-ons">
+          <h3>ADD ON</h3>
+          <ul>
+            {addOns.map((addOn, index) => (
+              <li key={index}>
+                <label>
+                  <input
+                    type="checkbox"
+                    onChange={(e) => handleAddOnChange(addOn, e.target.checked)}
+                  />
+                  {addOn.name} (+₹{addOn.price})
+                </label>
+              </li>
+            ))}
+          </ul>
+        </CardSection>
 
-      <CardSection className="card-summary">
-        <h4>Summary</h4>
-        <p>Base Price: ₹{basePrice}</p>
-        <p>Add-Ons: ₹{Object.values(selectedAddOns).reduce((total, price) => total + price, 0)}</p>
-        <p>Total Price: ₹{calculateTotalPrice}</p>
-        <button className="done-button" onClick={toggleMinimize}>Done</button>
-      </CardSection>
-    </div>
+        <CardSection className="card-summary">
+          <h4>Summary</h4>
+          <p>Base Price: ₹{basePrice}</p>
+          <p>Add-Ons: ₹{Object.values(selectedAddOns).reduce((total, price) => total + price, 0)}</p>
+          <p>Total Price: ₹{calculateTotalPrice}</p>
+          <button className="done-button" onClick={toggleMinimize}>Done</button>
+        </CardSection>
+      </div>
     </>
   );
 };
@@ -85,36 +82,39 @@ const CardSection = ({ className, children }) => {
 const App = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [priceRange, setPriceRange] = useState([1000, 5000]);
-  const [compareList, setCompareList] = useState([]);
+  const [productsData, setProductData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const [productsData,setProductData] = useState([]);
-  async function getProducts(){
+  async function getProducts() {
     return await supabase.from("products").select();
   }
 
-  useEffect(()=>{
-    getProducts().then(async ({data, error})=>{
-      if(error){ console.error(error);return;}
+  useEffect(() => {
+    getProducts().then(async ({ data, error }) => {
+      if (error) { 
+        console.error(error); 
+        return;
+      }
       let newData = [];
-      for(let ind in data){
+      for (let ind in data) {
         let obj = data[ind];
-        const {data:Photo, error:PhotoError} = await supabase.storage.from("addon").createSignedUrl(`${obj.image}`, 3600);
-        if(PhotoError)
-        console.log(PhotoError)
-        const {data:addons, error:addonsError} = await supabase.from("addons").select().eq("productid",obj.id);
-        let addonsList=[]
-        for(let adn in addons){
+        const { data: Photo, error: PhotoError } = await supabase.storage.from("addon").createSignedUrl(`${obj.image}`, 3600);
+        if (PhotoError) console.log(PhotoError);
+        const { data: addons, error: addonsError } = await supabase.from("addons").select().eq("productid", obj.id);
+        let addonsList = [];
+        for (let adn in addons) {
           let adf = addons[adn];
-          const {data:Photo2, error:PhotoError2} = await supabase.storage.from("addon").createSignedUrl(`${adf.image}`,3600);
-          if(PhotoError2)
-          console.log(PhotoError2)
-          addonsList.push({...adf, image:Photo2.signedUrl})
+          const { data: Photo2, error: PhotoError2 } = await supabase.storage.from("addon").createSignedUrl(`${adf.image}`, 3600);
+          if (PhotoError2) console.log(PhotoError2);
+          addonsList.push({ ...adf, image: Photo2.signedUrl });
         }
-        newData.push({...obj, addons:addonsList, image:Photo.signedUrl});
+        newData.push({ ...obj, addons: addonsList, image: Photo.signedUrl });
       }
       setProductData(newData);
+      setLoading(false);
     });
-  },[])
+  }, []);
+
   const handleSearch = (event) => {
     setSearchQuery(event.target.value.toLowerCase());
   };
@@ -123,64 +123,57 @@ const App = () => {
     setPriceRange(newValue);
   };
 
-  const handleCompareToggle = (product) => {
-    setCompareList((prevCompareList) => {
-      if (prevCompareList.includes(product)) {
-        return prevCompareList.filter((item) => item !== product);
-      } else {
-        return [...prevCompareList, product];
-      }
-    });
-  };
-
-  // const filteredProducts = productsData.filter((product) => {
-  //   const price = parseInt(product.price.replace('₹', ''), 10);
-  //   return (
-  //     product.title.toLowerCase().includes(searchQuery) &&
-  //     price >= priceRange[0] &&
-  //     price <= priceRange[1]
-  //   );
-  // });
-
   return (
     <div className="App">
       <div className="search-filter">
-        <input
-          type="text"
-          placeholder="Search products..."
-          value={searchQuery}
-          onChange={handleSearch}
-          className="search-bar"
-        />
-        <Slider
-          value={priceRange}
-          onChange={handleSliderChange}
-          valueLabelDisplay="auto"
-          min={1000}
-          max={5000}
-          className="price-slider"
-        />
+        {loading ? (
+          <>
+            <Skeleton variant="rectangular" height={40} width="80%" className="skeleton-bar" />
+            <Skeleton variant="rectangular" height={40} width="80%" className="skeleton-slider" style={{ marginTop: '10px' }} />
+          </>
+        ) : (
+          <>
+            <input
+              type="text"
+              placeholder="Search products..."
+              value={searchQuery}
+              onChange={handleSearch}
+              className="search-bar"
+            />
+            <Slider
+              value={priceRange}
+              onChange={handleSliderChange}
+              valueLabelDisplay="auto"
+              min={1000}
+              max={5000}
+              className="price-slider"
+            />
+          </>
+        )}
       </div>
-
+  
       <div className="products-grid">
-      {productsData.map((product, index) => (
-  <div key={index}>
-    <Card
-      title={product.title}
-      price={product.price}
-      details={product.details}
-      addOns={product.addons}
-      image={product.image}
-      initialMinimized={product.initialMinimized}
-    />
-  </div>
-))}
+        {loading ? (
+          Array.from({ length: 4 }).map((_, index) => (
+            <Skeleton key={index} variant="rectangular" height={200} width="90%" style={{ margin: '10px 0' }} />
+          ))
+        ) : (
+          productsData.map((product, index) => (
+            <div key={index}>
+              <Card
+                title={product.title}
+                price={product.price}
+                details={product.details}
+                addOns={product.addons}
+                image={product.image}
+                initialMinimized={product.initialMinimized}
+              />
+            </div>
+          ))
+        )}
       </div>
-{/*<ProductForm />*/}
-     </div>
-    
-   );
-
+    </div>
+  );
 };
 
 export default App;
