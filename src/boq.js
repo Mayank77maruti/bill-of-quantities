@@ -136,64 +136,70 @@ const App = () => {
     setPriceRange(newValue);
   };
 
-  return (
-    <div className="App">
-      <div className="search-filter">
-        {loading ? (
-          <>
-            <Skeleton variant="rectangular" height={40} width="80%" className="skeleton-bar" />
-            <Skeleton variant="rectangular" height={40} width="80%" className="skeleton-slider" />
-          </>
-        ) : (
-          <>
-            <input
-              type="text"
-              placeholder="Search products..."
-              value={searchQuery}
-              onChange={handleSearch}
-              className="search-bar"
-            />
-            <Slider
-              value={priceRange}
-              onChange={handleSliderChange}
-              valueLabelDisplay="auto"
-              min={1000}
-              max={5000}
-              className="price-slider"
-            />
-          </>
-        )}
-      </div>
-
-      <div className="products-grid">
-        {loading ? (
-          Array.from({ length: 4 }).map((_, index) => (
-            <Skeleton key={index} variant="rectangular" height={200} width="90%" style={{ margin: '10px 0' }} />
-          ))
-        ) : (
-          categories.map((category) => (
-            <div key={category} className="category-section">
-              <h2>{category}</h2>
-              {productsData
-                .filter((product) => product.category === category)
-                .map((product, index) => (
-                  <div key={index}>
-                    <Card
-                      title={product.title}
-                      price={product.price}
-                      details={product.details}
-                      addOns={product.addons}
-                      image={product.image}
-                      initialMinimized={product.initialMinimized}
-                    />
-                  </div>
-                ))}
-            </div>
-          ))
-        )}
-      </div>
+return (
+  <div className="App">
+    <div className="search-filter">
+      {loading ? (
+        <>
+          <Skeleton variant="rectangular" height={40} width="80%" className="skeleton-bar" />
+          <Skeleton variant="rectangular" height={40} width="80%" className="skeleton-slider" />
+        </>
+      ) : (
+        <>
+          <input
+            type="text"
+            placeholder="Search products..."
+            value={searchQuery}
+            onChange={handleSearch}
+            className="search-bar"
+          />
+          <Slider
+            value={priceRange}
+            onChange={handleSliderChange}
+            valueLabelDisplay="auto"
+            min={1000}
+            max={5000}
+            className="price-slider"
+          />
+        </>
+      )}
     </div>
-  );
+
+    <div className="products-grid">
+      {loading ? (
+        Array.from({ length: 4 }).map((_, index) => (
+          <div key={index} className="card-skeleton-container">
+            <Skeleton variant="rectangular" height={150} width="100%" className="skeleton-card-image" />
+            <Skeleton variant="text" width="60%" height={20} style={{ margin: '10px 0' }} />
+            <Skeleton variant="text" width="80%" height={20} style={{ margin: '5px 0' }} />
+            <Skeleton variant="text" width="50%" height={20} style={{ margin: '5px 0' }} />
+          </div>
+        ))
+      ) : (
+        categories.map((category) => (
+          <div key={category} className="category-section">
+            <h2>{category}</h2>
+            {productsData
+              .filter((product) => product.category === category)
+              .map((product, index) => (
+                <div key={index}>
+                  <Card
+                    title={product.title}
+                    price={product.price}
+                    details={product.details}
+                    addOns={product.addons}
+                    image={product.image}
+                    initialMinimized={product.initialMinimized}
+                  />
+                </div>
+              ))}
+          </div>
+        ))
+      )}
+    </div>
+  </div>
+);
+
 };
 
 export default App;
