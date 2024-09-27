@@ -21,6 +21,7 @@ const Card = ({ title, price, image, details, addOns, initialMinimized = false, 
 
   const toggleMinimize = () => setIsMinimized((prev) => !prev);
 
+  
   if (isMinimized) {
     return (
       <div className="minimized-card" onClick={toggleMinimize}>
