@@ -1,25 +1,25 @@
-import React, { useState, useMemo, useEffect, useCallback } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import './boq.css';
 import { Slider, Skeleton } from '@mui/material';
 import { supabase } from './supabase';
 
-const Card = React.memo(({ title, price, image, details, addOns, initialMinimized = false, roomData }) => {
+const Card = ({ title, price, image, details, addOns, initialMinimized = false, roomData }) => {
   const [selectedAddOns, setSelectedAddOns] = useState({});
   const [isMinimized, setIsMinimized] = useState(initialMinimized);
   const basePrice = price;
 
-  const handleAddOnChange = useCallback((addOn, isChecked) => {
+  const handleAddOnChange = (addOn, isChecked) => {
     setSelectedAddOns((prevSelectedAddOns) => ({
       ...prevSelectedAddOns,
       [addOn.name]: isChecked ? addOn.price : 0,
     }));
-  }, []);
+  };
 
   const calculateTotalPrice = useMemo(() => {
     return Object.values(selectedAddOns).reduce((total, addOnPrice) => total + addOnPrice, basePrice);
   }, [selectedAddOns, basePrice]);
 
-  const toggleMinimize = useCallback(() => setIsMinimized((prev) => !prev), []);
+  const toggleMinimize = () => setIsMinimized((prev) => !prev);
 
   if (isMinimized) {
     return (
@@ -37,7 +37,7 @@ const Card = React.memo(({ title, price, image, details, addOns, initialMinimize
   return (
     <div className="card-container">
       <CardSection className="card-image">
-        <img src={image} alt={title} className="image" loading="lazy" />
+        <img src={image} alt={title} className="image" />
       </CardSection>
 
       <CardSection className="card-features">
@@ -58,8 +58,8 @@ const Card = React.memo(({ title, price, image, details, addOns, initialMinimize
       <CardSection className="card-add-ons">
         <h3>ADD ON</h3>
         <ul>
-          {addOns.map((addOn) => (
-            <li key={addOn.id}>
+          {addOns.map((addOn, index) => (
+            <li key={index}>
               <label>
                 <input
                   type="checkbox"
@@ -81,17 +81,17 @@ const Card = React.memo(({ title, price, image, details, addOns, initialMinimize
       </CardSection>
     </div>
   );
-});
+};
 
-const CardSection = React.memo(({ className, children }) => {
+const CardSection = ({ className, children }) => {
   return <div className={`card ${className}`}>{children}</div>;
-});
+};
 
 const App = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [priceRange, setPriceRange] = useState([1000, 5000]);
   const [productsData, setProductData] = useState([]);
-  const categories = useMemo(() => [
+  const categories = [
     'Furniture', 
     'Civil / Plumbing', 
     'Lighting', 
@@ -102,11 +102,11 @@ const App = () => {
     'Smart Solutions', 
     'Flooring', 
     'Accessories'
-  ], []);
+  ];
   const [loading, setLoading] = useState(true);
   const [roomNumbers, setRoomNumbers] = useState([]);
 
-  const fetchRoomData = useCallback(async () => {
+  async function fetchRoomData() {
     try {
       const { data, error } = await supabase
         .from('areas')
@@ -118,19 +118,36 @@ const App = () => {
   
       if (data && data.length > 0) {
         const latestRoomData = data[0];
-        const roomsArray = Object.fromEntries(
-          Object.entries(latestRoomData).filter(([key]) => 
-            ['linear', 'ltype', 'md', 'manager', 'small', 'ups', 'bms', 'server', 'reception', 'lounge', 'sales', 'phonebooth', 'discussionroom', 'interviewroom', 'conferenceroom', 'boardroom', 'meetingroom', 'meetingroomlarge', 'hrroom', 'financeroom'].includes(key)
-          )
-        );
+        const roomsArray = {
+          linear: latestRoomData.linear,
+          ltype: latestRoomData.ltype,
+          md: latestRoomData.md,
+          manager: latestRoomData.manager,
+          small: latestRoomData.small,
+          ups: latestRoomData.ups,
+          bms: latestRoomData.bms,
+          server: latestRoomData.server,
+          reception: latestRoomData.reception,
+          lounge: latestRoomData.lounge,
+          sales: latestRoomData.sales,
+          phonebooth: latestRoomData.phonebooth,
+          discussionroom: latestRoomData.discussionroom,
+          interviewroom: latestRoomData.interviewroom,
+          conferenceroom: latestRoomData.conferenceroom,
+          boardroom: latestRoomData.boardroom,
+          meetingroom: latestRoomData.meetingroom,
+          meetingroomlarge: latestRoomData.meetingroomlarge,
+          hrroom: latestRoomData.hrroom,
+          financeroom: latestRoomData.financeroom,
+        };
         setRoomNumbers([roomsArray]);
       }
     } catch (error) {
       console.error('Error fetching room data:', error);
     }
-  }, []);
+  }
 
-  const fetchProductsData = useCallback(async () => {
+  async function fetchProductsData() {
     try {
       const { data, error } = await supabase
         .from("products")
@@ -150,14 +167,14 @@ const App = () => {
 
       if (signedUrlError) throw signedUrlError;
 
-      const urlMap = new Map(signedUrls.map(item => [item.path, item.signedUrl]));
+      const urlMap = Object.fromEntries(signedUrls.map(item => [item.path, item.signedUrl]));
 
       const processedData = data.map(product => ({
         ...product,
-        image: urlMap.get(product.image) || '',
+        image: urlMap[product.image] || '',
         addons: product.addons.map(addon => ({
           ...addon,
-          image: urlMap.get(addon.image) || ''
+          image: urlMap[addon.image] || ''
         }))
       }));
 
@@ -167,34 +184,19 @@ const App = () => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }
 
   useEffect(() => {
     Promise.all([fetchRoomData(), fetchProductsData()]);
-  }, [fetchRoomData, fetchProductsData]);
+  }, []);
 
-  const handleSearch = useCallback((event) => {
+  const handleSearch = (event) => {
     setSearchQuery(event.target.value.toLowerCase());
-  }, []);
+  };
 
-  const handleSliderChange = useCallback((event, newValue) => {
+  const handleSliderChange = (event, newValue) => {
     setPriceRange(newValue);
-  }, []);
-
-  const filteredProducts = useMemo(() => {
-    return productsData.filter((product) => 
-      product.title.toLowerCase().includes(searchQuery) &&
-      product.price >= priceRange[0] &&
-      product.price <= priceRange[1]
-    );
-  }, [productsData, searchQuery, priceRange]);
-
-  const categorizedProducts = useMemo(() => {
-    return categories.reduce((acc, category) => {
-      acc[category] = filteredProducts.filter(product => product.category === category);
-      return acc;
-    }, {});
-  }, [categories, filteredProducts]);
+  };
 
   return (
     <div className="App">
@@ -239,18 +241,21 @@ const App = () => {
           categories.map((category) => (
             <div key={category} className="category-section">
               <h2>{category}</h2>
-              {categorizedProducts[category].map((product) => (
-                <Card
-                  key={product.id}
-                  title={product.title}
-                  price={product.price}
-                  details={product.details}
-                  addOns={product.addons}
-                  image={product.image}
-                  initialMinimized={product.initialMinimized}
-                  // roomData={roomNumbers[0]}
-                />
-              ))}
+              {productsData
+                .filter((product) => product.category === category)
+                .map((product, index) => (
+                  <div key={product.id}>
+                    <Card
+                      title={product.title}
+                      price={product.price}
+                      details={product.details}
+                      addOns={product.addons}
+                      image={product.image}
+                      initialMinimized={product.initialMinimized}
+                      // roomData={roomNumbers[0]}
+                    />
+                  </div>
+                ))}
             </div>
           ))
         )}
