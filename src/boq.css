@@ -796,27 +796,142 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Price Slider Styling */
 .price-slider {
-  flex: 2;
-  margin-left: 20px;
-  color: #4299e1;
+  width: 100%; /* Full width of the container */
+  max-width: 400px; /* Maximum width for larger screens */
+  margin: 20px auto; /* Centers the slider and adds vertical space */
+  padding: 0 15px; /* Adds horizontal padding for mobile */
+  box-sizing: border-box; /* Includes padding in width calculation */
+}
+
+.price-slider .MuiSlider-root {
+  color: #4299e1; /* Main color theme */
 }
 
 .price-slider .MuiSlider-thumb {
   height: 20px;
   width: 20px;
-  background-color: #fff;
-  border: 2px solid currentColor;
-  margin-top: -8px;
+  background-color: #4299e1;
+  border: 2px solid #fff;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+  margin-top: -9px; /* Adjusts vertical positioning */
   margin-left: -10px;
 }
 
 .price-slider .MuiSlider-track {
   height: 4px;
+  background-color: #4299e1;
 }
 
 .price-slider .MuiSlider-rail {
   height: 4px;
+  background-color: #e2e8f0; /* Lighter shade for better contrast */
 }
+
+.price-slider .MuiSlider-thumb:hover,
+.price-slider .MuiSlider-thumb.Mui-focusVisible {
+  box-shadow: 0px 0px 8px rgba(66, 153, 225, 0.5);
+}
+
+.price-slider .MuiSlider-thumb.Mui-active {
+  box-shadow: 0px 0px 10px rgba(66, 153, 225, 0.8);
+}
+
+/* Media query for larger screens */
+@media (min-width: 768px) {
+  .price-slider {
+    padding: 0; /* Remove padding on larger screens */
+  }
+}
+/* boq.css */
+
+/* Overall container for the search and filter section */
+.search-filter {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9; /* Light background for better visibility */
+}
+
+/* Search bar styles */
+.search-bar {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #007bff; /* Blue border */
+  border-radius: 5px;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+/* Price slider styles */
+.price-slider {
+  width: 100%;
+  margin-top: 10px;
+}
+
+/* Filter dropdown styles */
+.filter-dropdown {
+  position: relative;
+  display: inline-block;
+  margin-top: 10px;
+}
+
+.filter-button {
+  padding: 10px 15px;
+  background-color: #007bff; /* Blue background */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.filter-button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Dropdown menu styles */
+.dropdown-menu {
+  position: absolute;
+  top: 100%; /* Position below the button */
+  left: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+  display: none; /* Hidden by default */
+}
+
+.filter-dropdown.active .dropdown-menu {
+  display: block; /* Show dropdown when active */
+}
+
+.menu-item {
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.menu-item:hover {
+  background-color: #f0f0f0; /* Light gray background on hover */
+}
+
+/* Add this for mobile responsiveness */
+@media (max-width: 600px) {
+  .search-filter {
+    padding: 8px;
+  }
+  
+  .search-bar, .filter-button {
+    font-size: 14px;
+  }
+}
+
 
 /* Compare Button Styling */
 .compare-button {
