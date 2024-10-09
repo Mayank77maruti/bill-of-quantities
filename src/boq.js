@@ -499,6 +499,20 @@ const App = () => {
     });
   }, [productsData, searchQuery, priceRange, selectedCategory]);
 
+  const groupedProducts = useMemo(() => {
+    const grouped = {};
+    filteredProducts.forEach(product => {
+      if (!grouped[product.category]) {
+        grouped[product.category] = {};
+      }
+      if (!grouped[product.category][product.subcategory]) {
+        grouped[product.category][product.subcategory] = [];
+      }
+      grouped[product.category][product.subcategory].push(product);
+    });
+    return grouped;
+  }, [filteredProducts]);
+
   return (
     <div className="App">
       <div className="search-filter">
@@ -541,36 +555,36 @@ const App = () => {
         {loading ? (
           Array.from({ length: 4 }).map((_, index) => (
             <div key={index} className="card-skeleton-container">
-            <Skeleton variant="rectangular" height={150} width="100%" className="skeleton-card-image" />
+              <Skeleton variant="rectangular" height={150} width="100%" className="skeleton-card-image" />
               <Skeleton variant="text" width="60%" height={20} style={{ margin: '10px 0' }} />
               <Skeleton variant="text" width="80%" height={20} style={{ margin: '5px 0' }} />
               <Skeleton variant="text" width="50%" height={20} style={{ margin: '5px 0' }} />
             </div>
           ))
         ) : (
-          categories.map((category) => {
-            const categoryProducts = filteredProducts.filter(product => product.category === category);
-            if (categoryProducts.length === 0) return null;
-
-            return (
-              <div key={category} className="category-section">
-                <h2>{category}</h2>
-                {categoryProducts.map((product) => (
-                  <div key={product.id}>
-                    <Card
-                      title={product.title}
-                      price={product.price}
-                      details={product.details}
-                      addOns={product.addons}
-                      image={product.image}
-                      initialMinimized={product.initialMinimized}
-                      // roomData={roomNumbers[0]} // Adjust this if necessary
-                    />
-                  </div>
-                ))}
-              </div>
-            );
-          })
+          Object.entries(groupedProducts).map(([category, subcategories]) => (
+            <div key={category} className="category-section">
+              <h2>{category}</h2>
+              {Object.entries(subcategories).map(([subcategory, products]) => (
+                <div key={subcategory} className="subcategory-section">
+                  <h3 className="subcategory-heading">{subcategory}</h3>
+                  {products.map((product) => (
+                    <div key={product.id}>
+                      <Card
+                        title={product.title}
+                        price={product.price}
+                        details={product.details}
+                        addOns={product.addons}
+                        image={product.image}
+                        initialMinimized={product.initialMinimized}
+                        roomData={roomNumbers[0]} // Adjust this if necessary
+                      />
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          ))
         )}
       </div>
     </div>
@@ -578,6 +592,5 @@ const App = () => {
 };
 
 export default App;
-
 
 

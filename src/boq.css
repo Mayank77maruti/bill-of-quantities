@@ -685,7 +685,7 @@ h1, h2, h3, h4, h5, h6 {
 .category-section h2 {
   font-size: 1.5rem;
   margin-bottom: 20px;
-  color: #2d3748;
+  color: #8463dc;
   border-bottom: 2px solid #e2e8f0;
   padding-bottom: 8px;
 }
@@ -932,6 +932,16 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
+.subcategory-heading {
+  font-size: 1.25rem; /* Slightly larger for better readability */
+  font-weight: 600; /* Semi-bold for emphasis */
+  margin-top: 20px; /* More space above */
+  margin-bottom: 12px; /* More space below */
+  color: #4a5568; /* Darker shade for better contrast */
+  border-bottom: 2px solid #e2e8f0; /* Consistent with main heading */
+  padding-bottom: 6px; /* More padding for better spacing */
+  margin-left: 9px;
+}
 
 /* Compare Button Styling */
 .compare-button {
