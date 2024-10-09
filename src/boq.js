@@ -281,9 +281,10 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Slider, Skeleton, Select, MenuItem, Button } from '@mui/material';
 import { supabase } from './supabase';
+import RoomDataBox from './RoomDataBox';
 import './boq.css';
 
-const Card = ({ title, price, image, details, addOns, initialMinimized = false, roomData }) => {
+const Card = ({ title, price, image, details, addOns, initialMinimized = false, roomData, quantity }) => {
   const [selectedAddOns, setSelectedAddOns] = useState({});
   const [isMinimized, setIsMinimized] = useState(initialMinimized);
   const basePrice = price;
@@ -331,6 +332,11 @@ const Card = ({ title, price, image, details, addOns, initialMinimized = false, 
                 <li key={key}>{`${key}: ${value}`}</li>
               ))}
             </ul>
+          </div>
+        )}
+        {quantity && (
+          <div className="quantity-info">
+            <p>Quantity: {quantity}</p>
           </div>
         )}
       </CardSection>
@@ -551,6 +557,8 @@ const App = () => {
         )}
       </div>
 
+      {roomNumbers.length > 0 && <RoomDataBox roomData={roomNumbers[0]} />}
+
       <div className="products-grid">
         {loading ? (
           Array.from({ length: 4 }).map((_, index) => (
@@ -577,7 +585,8 @@ const App = () => {
                         addOns={product.addons}
                         image={product.image}
                         initialMinimized={product.initialMinimized}
-                        roomData={roomNumbers[0]} // Adjust this if necessary
+                        // roomData={roomNumbers[0]} // Adjust this if necessary
+                        // quantity={roomNumbers[0]?.[product.title.toLowerCase()] || 0} // Pass the quantity
                       />
                     </div>
                   ))}
@@ -592,5 +601,3 @@ const App = () => {
 };
 
 export default App;
-
-

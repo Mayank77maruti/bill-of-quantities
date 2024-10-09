@@ -967,6 +967,56 @@ h1, h2, h3, h4, h5, h6 {
   background-color: #2c5282;
 }
 
+.room-data-box-container {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 20px;
+  gap: 10px;
+  justify-content: center;
+}
+.room-data-box {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  margin: 5px;
+  width: 160px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,.1);
+  transition: .2s;
+}
+.room-data-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0,0,0,.2);
+}
+.room-data-key {
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+}
+.room-data-value { color: #666; }
+.room-data-box-tooltip { position: relative; display: inline-block; }
+.room-data-box-tooltip .tooltip-text {
+  visibility: hidden;
+  width: 120px;
+  background: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -60px;
+  opacity: 0;
+  transition: opacity .3s;
+}
+.room-data-box-tooltip:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .card-container {
