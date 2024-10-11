@@ -974,31 +974,44 @@ h1, h2, h3, h4, h5, h6 {
   gap: 10px;
   justify-content: center;
 }
+
 .room-data-box {
   background: #fff;
   border: 1px solid #ddd;
   border-radius: 8px;
-  padding: 15px;
+  padding: 10px;
   margin: 5px;
-  width: 160px;
+  width: 140px;
   text-align: center;
-  box-shadow: 0 2px 4px rgba(0,0,0,.1);
-  transition: .2s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
 }
+
 .room-data-box:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 8px rgba(0,0,0,.2);
+  transform: translateY(-3px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
+
 .room-data-key {
   font-weight: bold;
   color: #333;
   margin-bottom: 5px;
+  font-size: 0.9em;
 }
-.room-data-value { color: #666; }
-.room-data-box-tooltip { position: relative; display: inline-block; }
+
+.room-data-value {
+  color: #666;
+  font-size: 0.85em;
+}
+
+.room-data-box-tooltip {
+  position: relative;
+  display: inline-block;
+}
+
 .room-data-box-tooltip .tooltip-text {
   visibility: hidden;
-  width: 120px;
+  width: 100px;
   background: #333;
   color: #fff;
   text-align: center;
@@ -1008,10 +1021,11 @@ h1, h2, h3, h4, h5, h6 {
   z-index: 1;
   bottom: 125%;
   left: 50%;
-  margin-left: -60px;
+  margin-left: -50px;
   opacity: 0;
-  transition: opacity .3s;
+  transition: opacity 0.3s;
 }
+
 .room-data-box-tooltip:hover .tooltip-text {
   visibility: visible;
   opacity: 1;

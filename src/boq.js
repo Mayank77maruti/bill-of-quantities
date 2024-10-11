@@ -557,7 +557,9 @@ const App = () => {
         )}
       </div>
 
-      {roomNumbers.length > 0 && <RoomDataBox roomData={roomNumbers[0]} />}
+      {roomNumbers.length > 0 && (
+        <RoomDataBox roomData={Object.fromEntries(Object.entries(roomNumbers[0]).filter(([_, value]) => value > 0))} />
+      )}
 
       <div className="products-grid">
         {loading ? (
